@@ -117,6 +117,5 @@ modules:
       - -DUSE_OPENXR=ON
       - -DMONOSPACE_FONT_DIR=/app/share/fonts
     sources:
-      - type: git
-        url: https://github.com/leuc/igraph-vlk.git
-        branch: main
+      - type: dir
+        path: /home/jsm/Code/igraph-vlk
