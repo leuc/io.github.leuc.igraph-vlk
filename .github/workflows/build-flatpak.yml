@@ -18,6 +18,8 @@ jobs:
   flatpak:
     name: "Flatpak"
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-25.08
       options: --privileged
@@ -35,7 +37,7 @@ jobs:
           manifest-path: io.github.leuc.igraph-vlk.yml
           cache-key: flatpak-builder-${{ github.sha }}
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
