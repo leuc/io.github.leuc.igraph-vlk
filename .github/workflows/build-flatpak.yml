@@ -1,0 +1,45 @@
+---
+name: Build and Release Flatpak
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g. v0.1.0)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Pre-Release'
+        required: true
+        default: false
+        type: boolean
+
+jobs:
+  flatpak:
+    name: "Flatpak"
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-25.08
+      options: --privileged
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Set version in metainfo
+        run: |
+          sed -i "s/VERSION/${{ inputs.version }}/" io.github.leuc.igraph-vlk.metainfo.xml
+          sed -i "s/DATE/$(date +%Y-%m-%d)/" io.github.leuc.igraph-vlk.metainfo.xml
+      - name: Build Flatpak
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: igraph-vlk.flatpak
+          manifest-path: io.github.leuc.igraph-vlk.yml
+          cache-key: flatpak-builder-${{ github.sha }}
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: "igraph-vlk ${{ inputs.version }}"
+          tag_name: ${{ inputs.version }}
+          prerelease: ${{ inputs.prerelease }}
+          files: igraph-vlk.flatpak

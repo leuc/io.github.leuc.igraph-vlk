@@ -1,0 +1,121 @@
+---
+app-id: io.github.leuc.igraph-vlk
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+sdk: org.freedesktop.Sdk
+command: igraph-vlk
+
+finish-args:
+  - --device=all
+  - --share=ipc
+  - --socket=wayland
+  - --socket=x11
+  - --filesystem=host
+
+cleanup:
+  - /lib/pkgconfig
+  - /lib/debug
+  - '*.la'
+  - '*.a'
+
+modules:
+
+  - name: cglm
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCGLM_HEADER_ONLY=ON
+    sources:
+      - type: git
+        url: https://github.com/recp/cglm.git
+        tag: v0.9.6
+
+  - name: glfw
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DGLFW_BUILD_WAYLAND=ON
+      - -DGLFW_BUILD_X11=ON
+      - -DGLFW_BUILD_TESTS=OFF
+      - -DGLFW_BUILD_EXAMPLES=OFF
+      - -DGLFW_BUILD_DOCS=OFF
+    sources:
+      - type: git
+        url: https://github.com/glfw/glfw.git
+        tag: 3.4
+
+  - name: openxr-sdk
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_TESTS=OFF
+    sources:
+      - type: git
+        url: https://github.com/KhronosGroup/OpenXR-SDK.git
+        tag: release-1.1.48
+
+  - name: igraph
+    buildsystem: simple
+    build-commands:
+      - echo "1.0.1-leuc-testing" > IGRAPH_VERSION
+      - cmake -B build -DCMAKE_INSTALL_PREFIX=/app -DCMAKE_BUILD_TYPE=Release -DIGRAPH_ENABLE_TLS=ON
+      - cmake --build build --parallel
+      - cmake --install build
+    sources:
+      - type: git
+        url: https://github.com/leuc/igraph.git
+        branch: testing
+
+  - name: stb
+    buildsystem: simple
+    build-commands:
+      - install -D -m 644 stb_truetype.h /app/include/stb/stb_truetype.h
+    sources:
+      - type: file
+        url: https://raw.githubusercontent.com/nothings/stb/master/stb_truetype.h
+        sha256: ecd30b05e0dd4fea3a13c26810dd9e1992dc379049482c393d5a19e6b5090aab
+
+  - name: gamecontrollerdb
+    buildsystem: simple
+    build-commands:
+      - install -D -m 644 gamecontrollerdb.txt /app/share/igraph-vlk/gamecontrollerdb.txt
+    sources:
+      - type: file
+        url: https://raw.githubusercontent.com/mdqinc/SDL_GameControllerDB/master/gamecontrollerdb.txt
+        sha256: 0229ce259c521b9856d792f9bad933dc41d029884b397617da7808581e8cceb2
+
+  - name: appdata
+    buildsystem: simple
+    build-commands:
+      - install -D -m 644 io.github.leuc.igraph-vlk.svg /app/share/icons/hicolor/scalable/apps/io.github.leuc.igraph-vlk.svg
+      - install -D -m 644 io.github.leuc.igraph-vlk.desktop /app/share/applications/io.github.leuc.igraph-vlk.desktop
+      - install -D -m 644 io.github.leuc.igraph-vlk.metainfo.xml /app/share/metainfo/io.github.leuc.igraph-vlk.metainfo.xml
+    sources:
+      - type: file
+        path: io.github.leuc.igraph-vlk.svg
+      - type: file
+        path: io.github.leuc.igraph-vlk.desktop
+      - type: file
+        path: io.github.leuc.igraph-vlk.metainfo.xml
+
+  - name: inconsolata-font
+    buildsystem: simple
+    build-commands:
+      - install -D -m 644 Inconsolata-Regular.ttf /app/share/fonts/truetype/inconsolata/Inconsolata-Regular.ttf
+      - install -D -m 644 Inconsolata-Bold.ttf /app/share/fonts/truetype/inconsolata/Inconsolata-Bold.ttf
+    sources:
+      - type: file
+        url: https://raw.githubusercontent.com/google/fonts/main/ofl/inconsolata/static/Inconsolata-Regular.ttf
+        sha256: 0f11ac40d1618e1aa1adb7322a14980a0b0c943421124022073f83236d15f0d5
+      - type: file
+        url: https://raw.githubusercontent.com/google/fonts/main/ofl/inconsolata/static/Inconsolata-Bold.ttf
+        sha256: 69deb4d3626bcdce00331458e62de49e0ae58236626841014939dd8c5119abb4
+
+  - name: igraph-vlk
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DUSE_OPENXR=ON
+      - -DMONOSPACE_FONT_DIR=/app/share/fonts
+    sources:
+      - type: git
+        url: https://github.com/leuc/igraph-vlk.git
+        branch: main

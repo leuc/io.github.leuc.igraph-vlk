@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.leuc.igraph-vlk</id>
+  <name>igraph-vlk</name>
+  <summary>3D network graph viewer with Vulkan rendering</summary>
+  <description>
+    <p>
+      Interactive graph visualization powered by igraph and Vulkan.
+      Features 30+ layout algorithms, 12 community detection methods,
+      10 centrality measures, real-time GPU-accelerated animations,
+      VR support, and a 3D spherical menu system.
+    </p>
+  </description>
+  <launchable type="desktop-id">io.github.leuc.igraph-vlk.desktop</launchable>
+  <url type="homepage">https://github.com/leuc/igraph-vlk</url>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>AGPL-3.0-or-later</project_license>
+  <developer id="io.github.leuc">
+    <name>leuc</name>
+  </developer>
+  <releases>
+    <release version="VERSION" date="DATE">
+      <description>
+        <p>Latest release.</p>
+      </description>
+    </release>
+  </releases>
+  <content_rating type="oars-1.1" />
+</component>
