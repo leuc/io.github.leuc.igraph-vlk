@@ -20,6 +20,12 @@ cleanup:
 
 modules:
 
+  - name: zstd
+    buildsystem: cmake-ninja
+    sources:
+      - type: git
+        url: https://github.com/facebook/zstd.git
+
   - name: cglm
     buildsystem: cmake-ninja
     config-opts:
