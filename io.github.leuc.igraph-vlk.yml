@@ -90,7 +90,7 @@ modules:
     sources:
       - type: file
         url: https://raw.githubusercontent.com/mdqinc/SDL_GameControllerDB/master/gamecontrollerdb.txt
-        sha256: 0229ce259c521b9856d792f9bad933dc41d029884b397617da7808581e8cceb2
+        sha256: dd4dd9dcb458aa4fbfd9b37ccdd4884b1e2e258edf8a16c3c4df3e77ac5174a0
 
   - name: appdata
     buildsystem: simple
